@@ -20,7 +20,6 @@ class ThemeRepository implements ThemeInterface
     public function store($request)
     {
         $theme = Theme::create($request->validated());
-
         return ThemeResource::make($theme);
     }
 
