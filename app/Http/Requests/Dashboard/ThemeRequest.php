@@ -23,7 +23,7 @@ class ThemeRequest extends FormRequest
     {
         return [
             'image' => ['required', 'image', 'mimes:png,jpg,jpeg'],
-            'colors.*'=>['string']
+            'colors.*' => ['string'],
         ];
     }
 }

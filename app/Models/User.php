@@ -53,7 +53,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function count_links_views($start, $end)
     {
-        $a =asset('');
+        $a = asset('');
+
         return $this->links_views()
             ->select('user_primary_links_views.primary_link_id', 'primary_links.name', DB::raw("CONCAT('$a', primary_links.logo) AS logo"), DB::raw('COUNT(primary_link_id) AS visit'))
             ->join('primary_links', 'primary_links.id', '=', 'user_primary_links_views.primary_link_id')

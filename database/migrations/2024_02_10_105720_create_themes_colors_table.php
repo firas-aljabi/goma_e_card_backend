@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('themes_colors', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('theme_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('color_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

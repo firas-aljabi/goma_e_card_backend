@@ -12,7 +12,7 @@ class Profile extends Model
 
     protected $primaryKey = 'user_id';
 
-    protected $fillable = ['user_id','theme_id','firstName','lastName','phoneNum','about','location','cover','photo','bgColor'];
+    protected $fillable = ['user_id', 'theme_id', 'firstName', 'lastName', 'phoneNum', 'about', 'location', 'cover', 'photo', 'bgColor'];
 
     public function user(): BelongsTo
     {

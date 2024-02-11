@@ -16,7 +16,7 @@ class ProfileRepository implements ProfileInterface
     {
         $user = auth()->user();
         $user->profile()->create($request->validated());
-        $user->update(['userName' =>  ($request->firstName ?? $user->firstName) . ($request->lastName ?? $user->lastName)]);
+        $user->update(['email' => $request->email, 'userName' => ($request->firstName ?? $user->firstName).($request->lastName ?? $user->lastName)]);
 
         return UserResource::make($user);
     }
@@ -46,6 +46,7 @@ class ProfileRepository implements ProfileInterface
 
         return UserResource::make($user);
     }
+
     public function store_theme($request)
     {
         $user = Auth::user();
@@ -65,7 +66,7 @@ class ProfileRepository implements ProfileInterface
         $user = Auth::user();
         $profile = Profile::where('user_id', $user->id)->first();
         $profile->update($request->safe()->except('primaryLinks'));
-        $user->update(['userName' =>  ($request->firstName ?? $user->firstName) . ($request->lastName ?? $user->lastName)]);
+        $user->update(['userName' => ($request->firstName ?? $user->firstName).($request->lastName ?? $user->lastName)]);
         if (isset($request->primaryLinks)) {
             $user->primary()->detach();
             $primaryLinks = [];
@@ -86,6 +87,7 @@ class ProfileRepository implements ProfileInterface
     public function visit($request)
     {
         DB::statement('CALL insert_profile_address(?, ?)', [$request->profile_id, $request->address]);
+
         return response()->json(['success' => 'success'], 201);
 
     }

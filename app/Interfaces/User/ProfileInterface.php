@@ -19,5 +19,4 @@ interface ProfileInterface
     public function store_other_data($request);
 
     public function store_theme($request);
-
 }

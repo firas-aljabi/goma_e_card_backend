@@ -17,6 +17,7 @@ class ThemeResource extends JsonResource
         return [
             'id' => $this->id,
             'image' => url($this->image),
+            'colors' => ColorResource::collection($this->colors),
         ];
     }
 }

@@ -8,7 +8,6 @@ use App\Models\View;
 use App\Models\ViewLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PHPUnit\Framework\Constraint\IsEmpty;
 
 class StatisticRepository implements StatisticInterface
 {
@@ -21,17 +20,16 @@ class StatisticRepository implements StatisticInterface
 
         return response([
             'count_profile_views' => $count_profile_views ?? 0,
-            'links_views' => count($count_links_views)==0?PrimaryLinkStatisticsResource::collection($user->primary):$count_links_views,
+            'links_views' => count($count_links_views) == 0 ? PrimaryLinkStatisticsResource::collection($user->primary) : $count_links_views,
         ]);
     }
 
     public function locations_for_link(Request $request)
     {
         if ($request->id_link) {
-         return  ViewLink::CountLinkByAddress($request->start_date, $request->end_date, Auth::id(), $request->id_link)->get();
-        }
-        else{
-            return View::CountByAddress(Auth::id(),$request->start_date, $request->end_date)->get();
+            return ViewLink::CountLinkByAddress($request->start_date, $request->end_date, Auth::id(), $request->id_link)->get();
+        } else {
+            return View::CountByAddress(Auth::id(), $request->start_date, $request->end_date)->get();
 
         }
     }

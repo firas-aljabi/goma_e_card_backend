@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Theme extends Model
 {
@@ -17,5 +18,10 @@ class Theme extends Model
         $image->move(public_path('themes/'), $newImageName);
 
         return $this->attributes['image'] = '/themes/'.$newImageName;
+    }
+
+    public function colors(): BelongsToMany
+    {
+        return $this->belongsToMany(Color::class, 'themes_colors')->select('name');
     }
 }

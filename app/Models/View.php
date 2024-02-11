@@ -13,13 +13,13 @@ class View extends Model
 
     protected $fillable = ['profile_id', 'address', 'date'];
 
-    public function scopeCountByAddress(Builder $query, $profileId,$start, $end)
+    public function scopeCountByAddress(Builder $query, $profileId, $start, $end)
     {
 
         return $query->select(
             'address',
             DB::raw('COUNT(address) as count'),
-        ) ->whereBetween('created_at', [$start, $end.' 23:59:59'])
+        )->whereBetween('created_at', [$start, $end.' 23:59:59'])
             ->where('profile_id', $profileId)
             ->groupBy('address');
 

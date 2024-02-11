@@ -26,8 +26,8 @@ class step1ProfileRequest extends FormRequest
             'lastName' => 'required|string|max:255',
             'location' => 'sometimes|string|max:255',
             'phoneNum' => 'sometimes|string|max:255',
-            'about'=>'sometimes|string|max:255',
-            'email'=>'sometimes|email'
+            'about' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email',
         ];
     }
 }

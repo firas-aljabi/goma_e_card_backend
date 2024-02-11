@@ -2,7 +2,6 @@
 
 namespace App\Repository\User;
 
-use App\Http\Resources\ProfilePrimaryLinkResource;
 use App\Interfaces\User\LinkInterface;
 use App\Models\ProfilePrimaryLink;
 use Carbon\Carbon;
@@ -10,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class LinkRepository implements LinkInterface
 {
-    public function visit($user, $primaryLink,$request)
+    public function visit($user, $primaryLink, $request)
     {
         $primaryLink = $user->primary->where('id', $primaryLink)->first();
         if (! $primaryLink) {
@@ -23,6 +22,7 @@ class LinkRepository implements LinkInterface
 
         if ($ProfilePrimaryLink) {
             DB::select('CALL insert_user_primary_links_views(?, ?, ?, ?)', [$user->id, $primaryLink->id, $request->address, Carbon::now()]);
+
             return response()->json(['success' => 'success'], 201);
         } else {
             // Handle the case where the ProfilePrimaryLink is not found

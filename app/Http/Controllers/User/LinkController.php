@@ -16,9 +16,9 @@ class LinkController extends Controller
         $this->link = $link;
     }
 
-    public function visit(User $user, $primaryLink,Request $request)
+    public function visit(User $user, $primaryLink, Request $request)
     {
-        return $this->link->visit($user, $primaryLink,$request);
+        return $this->link->visit($user, $primaryLink, $request);
     }
 
     public function destroy(User $user, $primaryLink)
