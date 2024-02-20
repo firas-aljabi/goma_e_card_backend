@@ -20,7 +20,7 @@ class StatisticRepository implements StatisticInterface
 
         return response([
             'count_profile_views' => $count_profile_views ?? 0,
-            'links_views' => count($count_links_views) == 0 ? PrimaryLinkStatisticsResource::collection($user->primary) : $count_links_views,
+            'links_views' => $count_links_views,
         ]);
     }
 
