@@ -56,23 +56,50 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $host = asset('');
 
-        return $this->links_views()
+        $linkView= $this->links_views()
             ->select('user_primary_links_views.primary_link_id', 'primary_links.name', DB::raw("CONCAT('$host', primary_links.logo) AS logo"), DB::raw('COUNT(primary_link_id) AS visit'))
             ->join('primary_links', 'primary_links.id', '=', 'user_primary_links_views.primary_link_id')
             ->whereBetween('user_primary_links_views.created_at', [$start, $end.' 23:59:59'])
             ->groupBy('user_primary_links_views.primary_link_id', 'primary_links.name', 'primary_links.logo')
-            ->union(function ($query) use ($host) {
-                $query->select('ul.primary_link_id', 'primary_links.name', DB::raw("CONCAT('$host', primary_links.logo) AS logo"),DB::raw('0 AS visit'))
-                    ->join('primary_links', 'primary_links.id', '=', 'ul.primary_link_id')
-                    ->from('user_primary_links AS ul')
-                    ->whereNotExists(function ($subquery)  {
-                        $subquery->select(DB::raw(0))
-                            ->from('user_primary_links_views AS uvv')
-                            ->whereRaw('ul.primary_link_id = uvv.primary_link_id');
-                    })
-                    ->where('ul.user_id', Auth::id());
-            })
             ->get();
+
+        $linkIds= $linkView->pluck('primary_link_id');
+
+        $linkNotViewBetween= $this->links_views()
+            ->select('user_primary_links_views.primary_link_id', 'primary_links.name', DB::raw("CONCAT('$host', primary_links.logo) AS logo"), DB::raw('0 AS visit'))
+            ->join('primary_links', 'primary_links.id', '=', 'user_primary_links_views.primary_link_id')
+            ->whereNotIn('user_primary_links_views.primary_link_id', $linkIds)
+            ->get();
+
+        $linkDontView = DB::table('user_primary_links as ul')
+            ->join('primary_links', 'primary_links.id', '=', 'ul.primary_link_id')
+            ->select(
+                'ul.primary_link_id',
+                'primary_links.name',
+                DB::raw("CONCAT('$host', primary_links.logo) AS logo"),
+                DB::raw('0 AS visit')
+            )
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(0))
+                    ->from('user_primary_links_views as uvv')
+                    ->whereRaw('ul.primary_link_id = uvv.primary_link_id')
+                    ->whereRaw('ul.user_id = uvv.user_id');
+            })
+            ->where('ul.user_id', Auth::id())->get();
+      return  $mergedResults = $linkView->concat($linkNotViewBetween)->concat($linkDontView);
+
+//            ->union(function ($query) use ($host) {
+//                $query->select('ul.primary_link_id', 'primary_links.name', DB::raw("CONCAT('$host', primary_links.logo) AS logo"),DB::raw('0 AS visit'))
+//                    ->join('primary_links', 'primary_links.id', '=', 'ul.primary_link_id')
+//                    ->from('user_primary_links AS ul')
+//                    ->whereNotExists(function ($subquery)  {
+//                        $subquery->select(DB::raw(0))
+//                            ->from('user_primary_links_views AS uvv')
+//                            ->whereRaw('ul.primary_link_id = uvv.primary_link_id')->whereRaw('ul.user_id = uvv.user_id');
+//                    })
+//                    ->where('ul.user_id', Auth::id());
+//            })
+//            ->dd();
 
     }
 }
