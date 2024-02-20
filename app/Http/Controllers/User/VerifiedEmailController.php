@@ -93,7 +93,7 @@ class VerifiedEmailController extends Controller
 
 $user = Auth::user();
         if (md5($request->current_password)!= $user->password) {
-            return response()->json(['message' => 'Current password is incorrect.'], 401);
+            return response()->json(['message' => 'Current password iis incorrect.'], 401);
         }
 
         $user->update([
