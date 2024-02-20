@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\EditPasswordRequest;
 use App\Http\Requests\user\VerifiedEmail\ChangeEmailRequest;
 use App\Http\Requests\user\VerifiedEmail\CreateCodeRequest;
 use App\Http\Requests\user\VerifiedEmail\VerifiedCodeRequest;
@@ -86,5 +87,19 @@ class VerifiedEmailController extends Controller
         $user->update(['password' => md5($request->password), 'email_verified_at' => null]);
 
         return response()->json(['message' => 'Password changed successfully']);
+    }
+    public function EditPassword(EditPasswordRequest $request)
+    {
+
+$user = Auth::user();
+        if (md5($request->current_password)!= $user->password) {
+            return response()->json(['message' => 'Current password is incorrect.'], 401);
+        }
+
+        $user->update([
+            'password' =>md5($request->new_password),
+        ]);
+
+        return response()->json(['message' => 'Password updated successfully.']);
     }
 }

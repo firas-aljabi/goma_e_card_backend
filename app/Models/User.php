@@ -69,6 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->select('user_primary_links_views.primary_link_id', 'primary_links.name', DB::raw("CONCAT('$host', primary_links.logo) AS logo"), DB::raw('0 AS visit'))
             ->join('primary_links', 'primary_links.id', '=', 'user_primary_links_views.primary_link_id')
             ->whereNotIn('user_primary_links_views.primary_link_id', $linkIds)
+            ->groupBy('user_primary_links_views.primary_link_id', 'primary_links.name', 'primary_links.logo')
             ->get();
 
         $linkDontView = DB::table('user_primary_links as ul')
@@ -88,42 +89,8 @@ class User extends Authenticatable implements MustVerifyEmail
             ->where('ul.user_id', Auth::id())->get();
       return  $mergedResults = $linkView->concat($linkNotViewBetween)->concat($linkDontView);
 
-//            ->union(function ($query) use ($host) {
-//                $query->select('ul.primary_link_id', 'primary_links.name', DB::raw("CONCAT('$host', primary_links.logo) AS logo"),DB::raw('0 AS visit'))
-//                    ->join('primary_links', 'primary_links.id', '=', 'ul.primary_link_id')
-//                    ->from('user_primary_links AS ul')
-//                    ->whereNotExists(function ($subquery)  {
-//                        $subquery->select(DB::raw(0))
-//                            ->from('user_primary_links_views AS uvv')
-//                            ->whereRaw('ul.primary_link_id = uvv.primary_link_id')->whereRaw('ul.user_id = uvv.user_id');
-//                    })
-//                    ->where('ul.user_id', Auth::id());
-//            })
-//            ->dd();
+
 
     }
 }
-//SELECT
-//    uv.primary_link_id,
-//    COUNT(uv.primary_link_id) AS visit
-//FROM
-//    `user_primary_links_views` AS uv
-//WHERE
-//    uv.user_id = 1
-//GROUP BY
-//    uv.primary_link_id
-//UNION
-//SELECT
-//    ul.primary_link_id,
-//    0 AS visit
-//FROM
-//    user_primary_links AS ul
-//WHERE NOT
-//    EXISTS(
-//        SELECT
-//        0
-//    FROM
-//        `user_primary_links_views` AS uvv
-//    WHERE
-//        ul.primary_link_id = uvv.primary_link_id
-//)
+

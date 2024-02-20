@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/create_theme', [ProfileController::class, 'store_theme']);
     Route::post('update_profile', [ProfileController::class, 'update']);
     Route::put('change_email', [VerifiedEmailController::class, 'change_email']);
+    Route::post('EditPassword', [VerifiedEmailController::class, 'EditPassword']);
     Route::delete('delete/{user}/primary_link/{PrimaryLink}', [LinkController::class, 'destroy']);
 
 });
